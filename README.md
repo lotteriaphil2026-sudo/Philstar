@@ -42,4 +42,4 @@ The header uses the supplied Philstar menu labels, icons and publisher links. Se
 The screenshot-matched header includes the supplied publisher logo, a toggleable sections menu, business-topic links and the TradingView ticker iframe extracted from the supplied HTML. Market quotes are supplied by TradingView (and may be delayed); this app does not generate or guarantee live prices. The widget and publisher logo require internet access.
 
 ## Article body update
-For an existing installation, run `php artisan migrate --force` followed by `php artisan db:seed --force` to import the supplied Lulu article body. This article is user-supplied text and is not attributed to the original publisher or reporter. Its statements have not been independently verified.
+For an existing installation after deploying content changes, run `php artisan migrate --force` followed by `php artisan db:seed --force` to sync article records, including the Mom’s Touch story and removal of the stale Lulu duplicate. The Lulu and Mom’s Touch articles contain user-supplied text and are not attributed to the original publisher or reporter. Their statements have not been independently verified.

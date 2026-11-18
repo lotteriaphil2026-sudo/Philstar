@@ -7,6 +7,7 @@ class NewsTest extends TestCase {
     use RefreshDatabase;
     protected function setUp(): void { parent::setUp();$this->seed(); }
     public function test_home_displays_seeded_news(): void { $this->get('/')->assertOk()->assertSee('The business edition')->assertSee('Lulu Retail plans Philippine expansion, franchise opportunities and bond offering'); }
+    public function test_legacy_favicon_url_redirects_to_svg(): void { $this->get('/favicon.ico')->assertRedirect('/favicon.svg'); }
     public function test_moms_touch_article_is_seeded_with_its_image_and_proposed_program_details(): void {
         $slug='moms-touch-eyes-philippine-expansion-as-korean-fast-food-brand-accelerates-global-growth';
         $this->get('/')->assertOk()->assertSee('Mom’s Touch Eyes Philippine Expansion as Korean Fast-Food Brand Accelerates Global Growth');
