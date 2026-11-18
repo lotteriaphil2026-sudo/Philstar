@@ -30,7 +30,11 @@
         @if($article->body)
             <div class="article-body">
                 @foreach($article->body as $paragraph)
-                    <p>{!! preg_replace('/\*\*(.+?)\*\*/u', '<strong>$1</strong>', e($paragraph)) !!}</p>
+                    @if(\Illuminate\Support\Str::startsWith($paragraph, '### '))
+                        <h2>{{ \Illuminate\Support\Str::after($paragraph, '### ') }}</h2>
+                    @else
+                        <p>{!! preg_replace('/\*\*(.+?)\*\*/u', '<strong>$1</strong>', e($paragraph)) !!}</p>
+                    @endif
                 @endforeach
             </div>
         @else
