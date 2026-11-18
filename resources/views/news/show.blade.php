@@ -51,12 +51,6 @@
             >
                 Read original article ↗
             </a>
-        @else
-            <div class="note">
-                User-supplied content for this preview.
-                The announcement and regulatory statements
-                have not been independently verified.
-            </div>
         @endif
     </article>
 @endsection
