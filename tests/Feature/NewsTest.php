@@ -23,9 +23,15 @@ class NewsTest extends TestCase {
         $this->get('/')->assertOk()->assertSee('Mom’s Touch Eyes Philippine Expansion as Korean Fast-Food Brand Accelerates Global Growth');
         $this->get('/articles/'.$slug)
             ->assertOk()
+            ->assertSee('By Kristofer Purnell')
             ->assertSee('/images/moms-touch.jpg')
             ->assertSee('Proposed Joint Venture Program')
             ->assertSee('would require formal verification before any public offering or enrollment');
+    }
+    public function test_lulu_article_uses_requested_author_byline(): void {
+        $this->get('/articles/lulu-retail-plans-philippine-expansion-franchise-opportunities-and-bond-offering')
+            ->assertOk()
+            ->assertSee('By Cristina Chi');
     }
     public function test_search_filters_results(): void { $this->get('/?q=Lulu+Retail')->assertOk()->assertSee('Lulu Retail plans Philippine expansion, franchise opportunities and bond offering')->assertDontSee('Little faces, big smiles'); }
     public function test_categories_filter_results(): void { $this->get('/?category=Banking')->assertOk()->assertSee('Banking')->assertDontSee('BIR issues electronic invoicing guidelines'); }
