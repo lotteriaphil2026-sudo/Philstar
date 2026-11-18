@@ -21,6 +21,18 @@
             ? url($article->image)
             : null;
         $shareImageAlt = 'Main photograph accompanying: ' . $shareTitle;
+        $shareImageInfo = null;
+
+        if (isset($article) && str_starts_with((string) $article->image, '/images/')) {
+            $shareImagePath = realpath(public_path(ltrim(parse_url($article->image, PHP_URL_PATH), '/')));
+            $sharePublicPath = realpath(public_path());
+
+            if ($shareImagePath && $sharePublicPath
+                && str_starts_with($shareImagePath, $sharePublicPath . DIRECTORY_SEPARATOR)
+                && is_file($shareImagePath)) {
+                $shareImageInfo = @getimagesize($shareImagePath) ?: null;
+            }
+        }
     @endphp
 
     <title>{{ $shareTitle }} | Business Desk</title>
@@ -41,6 +53,13 @@
     @if($shareImage)
         <meta property="og:image" content="{{ $shareImage }}">
         <meta property="og:image:alt" content="{{ $shareImageAlt }}">
+
+        @if($shareImageInfo)
+            <meta property="og:image:width" content="{{ $shareImageInfo[0] }}">
+            <meta property="og:image:height" content="{{ $shareImageInfo[1] }}">
+            <meta property="og:image:type" content="{{ $shareImageInfo['mime'] }}">
+        @endif
+
         <meta name="twitter:image" content="{{ $shareImage }}">
         <meta name="twitter:image:alt" content="{{ $shareImageAlt }}">
     @endif
