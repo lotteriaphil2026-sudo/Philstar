@@ -7,6 +7,16 @@ class NewsTest extends TestCase {
     use RefreshDatabase;
     protected function setUp(): void { parent::setUp();$this->seed(); }
     public function test_home_displays_seeded_news(): void { $this->get('/')->assertOk()->assertSee('The business edition')->assertSee('Lulu Retail plans Philippine expansion, franchise opportunities and bond offering'); }
+    public function test_homepage_uses_website_share_metadata_not_the_last_article(): void {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('property="og:type" content="website"', false)
+            ->assertSee('property="og:title" content="Philstar Business News"', false)
+            ->assertSee('property="og:image"', false)
+            ->assertSee('/images/lulu-store.png', false)
+            ->assertSee('name="twitter:card" content="summary_large_image"', false)
+            ->assertDontSee('og:title" content="Ang bagong numero para i-convict si Sara"', false);
+    }
     public function test_legacy_favicon_url_redirects_to_svg(): void { $this->get('/favicon.ico')->assertRedirect('/favicon.svg'); }
     public function test_moms_touch_article_is_seeded_with_its_image_and_proposed_program_details(): void {
         $slug='moms-touch-eyes-philippine-expansion-as-korean-fast-food-brand-accelerates-global-growth';

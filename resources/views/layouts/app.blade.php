@@ -5,25 +5,30 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
     @php
-        $shareTitle = isset($article)
+        $isArticlePage = request()->routeIs('news.show') && isset($article);
+        $shareTitle = $isArticlePage
             ? $article->title
-            : trim($__env->yieldContent('title', 'Business'));
-        $shareDescription = isset($article) && filled($article->excerpt)
+            : 'Philstar Business News';
+        $shareDescription = $isArticlePage && filled($article->excerpt)
             ? \Illuminate\Support\Str::limit(
                 trim(preg_replace('/\s+/u', ' ', strip_tags($article->excerpt))),
                 200
             )
-            : 'Business news and company updates.';
-        $shareUrl = isset($article)
+            : ($isArticlePage
+                ? 'Business news and company updates.'
+                : 'The latest business headlines, company news, and market updates from the Philippines.');
+        $shareUrl = $isArticlePage
             ? route('news.show', $article)
             : url()->current();
-        $shareImage = isset($article) && filled($article->image)
+        $shareImage = $isArticlePage && filled($article->image)
             ? url($article->image)
-            : null;
-        $shareImageAlt = 'Main photograph accompanying: ' . $shareTitle;
+            : ($isArticlePage ? null : asset('images/lulu-store.png'));
+        $shareImageAlt = $isArticlePage
+            ? 'Main photograph accompanying: ' . $shareTitle
+            : 'Philstar Business News';
         $shareImageInfo = null;
 
-        if (isset($article) && str_starts_with((string) $article->image, '/images/')) {
+        if ($isArticlePage && str_starts_with((string) $article->image, '/images/')) {
             $shareImagePath = realpath(public_path(ltrim(parse_url($article->image, PHP_URL_PATH), '/')));
             $sharePublicPath = realpath(public_path());
 
@@ -41,7 +46,7 @@
 
     <meta property="og:site_name" content="Business Desk">
     <meta property="og:locale" content="en_PH">
-    <meta property="og:type" content="{{ isset($article) ? 'article' : 'website' }}">
+    <meta property="og:type" content="{{ $isArticlePage ? 'article' : 'website' }}">
     <meta property="og:title" content="{{ $shareTitle }}">
     <meta property="og:description" content="{{ $shareDescription }}">
     <meta property="og:url" content="{{ $shareUrl }}">
@@ -64,7 +69,7 @@
         <meta name="twitter:image:alt" content="{{ $shareImageAlt }}">
     @endif
 
-    @if(isset($article) && $article->published_at)
+    @if($isArticlePage && $article->published_at)
         <meta property="article:published_time" content="{{ $article->published_at->toIso8601String() }}">
         <meta property="article:section" content="{{ $article->category }}">
         <meta name="author" content="{{ $article->author }}">
