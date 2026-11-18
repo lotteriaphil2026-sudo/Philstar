@@ -24,7 +24,7 @@ class NewsTest extends TestCase {
     public function test_lulu_announcement_has_one_correct_source_and_removes_bir_duplicate(): void {
         $luluUrl='https://philstar-business.com/articles/lulu-retail-plans-philippine-expansion-franchise-opportunities-and-bond-offering';
         $birUrl='https://philstar-business.com/articles/bir-issues-electronic-invoicing-guidelines';
-        Article::create(['slug'=>'lulu-retail-bir-duplicate','title'=>'Lulu Retail plans Philippine expansion, franchise opportunities and bond offering','excerpt'=>'Duplicate announcement','author'=>'User-supplied content','category'=>'Companies','image'=>'','source_url'=>$birUrl,'published_at'=>'2026-09-26 00:00:00','body'=>['Duplicate announcement']]);
+        Article::create(['slug'=>'bir-issues-electronic-invoicing-guidelines','title'=>'Lulu Retail plans Philippine expansion, franchise opportunities and bond offering','excerpt'=>'Duplicate announcement','author'=>'User-supplied content','category'=>'Companies','image'=>'','source_url'=>$birUrl,'published_at'=>'2026-09-26 00:00:00','body'=>['Duplicate announcement']]);
         $this->seed();
         $this->assertSame(1,Article::where('title','Lulu Retail plans Philippine expansion, franchise opportunities and bond offering')->count());
         $this->assertSame($luluUrl,Article::where('slug','lulu-retail-plans-philippine-expansion-franchise-opportunities-and-bond-offering')->value('source_url'));
@@ -32,7 +32,7 @@ class NewsTest extends TestCase {
     }
     public function test_stale_bir_link_is_hidden_and_lulu_article_is_featured_first(): void {
         $birUrl='https://philstar-business.com/articles/bir-issues-electronic-invoicing-guidelines';
-        Article::create(['slug'=>'lulu-retail-stale-bir-link','title'=>'Lulu Retail plans Philippine expansion, franchise opportunities and bond offering','excerpt'=>'Duplicate announcement','author'=>'User-supplied content','category'=>'Companies','image'=>'','source_url'=>$birUrl,'published_at'=>'2026-11-19 00:00:00','body'=>['Duplicate announcement']]);
+        Article::create(['slug'=>'bir-issues-electronic-invoicing-guidelines','title'=>'Lulu Retail plans Philippine expansion, franchise opportunities and bond offering','excerpt'=>'Duplicate announcement','author'=>'User-supplied content','category'=>'Companies','image'=>'','source_url'=>$birUrl,'published_at'=>'2026-11-19 00:00:00','body'=>['Duplicate announcement']]);
         $this->get('/')
             ->assertOk()
             ->assertDontSee($birUrl)
@@ -40,7 +40,7 @@ class NewsTest extends TestCase {
                 '/articles/lulu-retail-plans-philippine-expansion-franchise-opportunities-and-bond-offering',
                 '/articles/moms-touch-eyes-philippine-expansion-as-korean-fast-food-brand-accelerates-global-growth',
             ], false);
-        $this->get('/articles/lulu-retail-stale-bir-link')->assertNotFound();
+        $this->get('/articles/bir-issues-electronic-invoicing-guidelines')->assertNotFound();
     }
     public function test_empty_search_and_input_validation(): void { $this->get('/?q=zzzznomatch')->assertOk()->assertSee('No stories found');$this->getJson('/?page=-1')->assertUnprocessable(); }
     public function test_seeding_is_idempotent(): void { $count=Article::count();$this->seed();$this->assertSame($count,Article::count()); }
